@@ -16,15 +16,15 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		let pokemon = interaction.options.getString('pokemon').toLowerCase();
-		pokemon = LanguageManager.translate(pokemon)
+		const pokemon = interaction.options.getString('pokemon');
+		const searchTerm = LanguageManager.translate(pokemon.toLowerCase());
 
-		const { height, weight, name, types, stats, sprites } = await PokemonService.getPokemon(pokemon);
-		const type = types[0].type.name;
+		const { height, weight, name, types, stats, sprites } = await PokemonService.getPokemon(searchTerm);
+		const color = types[0].type.name;
 
 		const embed = new MessageEmbed()
-			.setColor(colors[type])
-			.setTitle(name)
+			.setColor(colors[color])
+			.setTitle(pokemon)
 			.setThumbnail(sprites.front_default)
 			.addFields(
 				{ name: 'Height', value: `${height}`, inline: true },

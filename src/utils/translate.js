@@ -1,5 +1,5 @@
-const names = require('../languages/names');
+const pokemon = require('../languages/pokemon');
 
 module.exports.translate = function(name, target = 'en') {
-  return names['de'][name][target];
-}
+	return pokemon[name][target];
+};
