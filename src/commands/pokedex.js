@@ -7,7 +7,7 @@ const language = require('../utils/language.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName(language.lookup('command.pokedex.name', 'de').toLowerCase())
+		.setName(language.lookup('command.pokedex.name', 'de'))
 		.setDescription(language.lookup('command.pokedex.description', 'de'))
 		.addStringOption(option =>
 			option.setName(language.lookup('option.pokemon.name', 'de'))
