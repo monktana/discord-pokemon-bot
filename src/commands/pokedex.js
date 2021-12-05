@@ -3,25 +3,24 @@ const { MessageEmbed } = require('discord.js');
 const PokemonService = require('../services/pokemon-service.js');
 const colors = require('../utils/colors');
 const utils = require('../utils/utils.js');
-
-const { de, en } = utils.getTranslator();
+const language = require('../utils/language.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName(de['command.pokedex.name'].toLowerCase())
-		.setDescription(de['command.pokedex.description'])
+		.setName(language.lookup('command.pokedex.name', 'de').toLowerCase())
+		.setDescription(language.lookup('command.pokedex.description', 'de'))
 		.addStringOption(option =>
-			option.setName(de['option.pokemon.name'])
-				.setDescription(de['option.pokemon.description'])
+			option.setName(language.lookup('option.pokemon.name', 'de'))
+				.setDescription(language.lookup('option.pokemon.description', 'de'))
 				.setRequired(true),
 		),
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		const pokemon = interaction.options.getString(de['option.pokemon.name']);
-		const searchTerm = Object.entries(de).find(entry => entry[1] == pokemon)[0]
+		const pokemon = interaction.options.getString(language.lookup('option.pokemon.name', 'de'));
+		const searchTerm = language.translate(pokemon, 'de', 'en');
 
-		const { height, weight, types, stats, sprites } = await PokemonService.getPokemon(en[searchTerm]);
+		const { height, weight, types, stats, sprites } = await PokemonService.getPokemon(searchTerm);
 		const color = types[0].type.name;
 
 		const embed = new MessageEmbed({
@@ -29,10 +28,10 @@ module.exports = {
 			title: utils.capitalize(pokemon),
 			thumbnail: { url: sprites.front_default },
 			fields: [
-				{ name: de['pokemon.stats.height'], value: `${height}`, inline: true },
-				{ name: de['pokemon.stats.weight'], value: `${weight}`, inline: true },
-				{ name: de['pokemon.types.types'], value: types.map(type => de[`pokemon.types.${type.type.name}`]).join(', ') },
-				{ name: de['pokemon.stats.base'], value: stats.map(stat => de[`pokemon.stats.${stat.stat.name}`] + `: ${stat.base_stat}`).join('\r\n') },
+				{ name: language.lookup('pokemon.stats.height','de'), value: `${height}`, inline: true },
+				{ name: language.lookup('pokemon.stats.weight','de'), value: `${weight}`, inline: true },
+				{ name: language.lookup('pokemon.types.types','de'), value: types.map(type => language.lookup(`pokemon.types.${type.type.name}`,'de')).join(', ') },
+				{ name: language.lookup('pokemon.stats.base','de'), value: stats.map(stat => language.lookup(`pokemon.stats.${stat.stat.name}`,'de') + `: ${stat.base_stat}`).join('\r\n') },
 			],
 		});
 
