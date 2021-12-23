@@ -1,9 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
-const PokemonService = require('../services/pokemon-service.js');
+const PokemonService = require('../services/pokemon-service');
 const colors = require('../utils/colors');
-const utils = require('../utils/utils.js');
-const language = require('../utils/language.js');
+const utils = require('../utils/utils');
+const language = require('../utils/language');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,24 +17,29 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		const pokemon = interaction.options.getString(language.lookup('option.pokemon.name', 'de'));
+		const pokemon = interaction.options.getString(language.lookup('option.pokemon.name', 'de')).toLowerCase();
 		const searchTerm = language.translate(pokemon, 'de', 'en');
 
-		const { height, weight, types, stats, sprites } = await PokemonService.getPokemon(searchTerm);
-		const color = types[0].type.name;
+		try {
+			const pokemonData = await PokemonService.getPokemon(searchTerm);
+			const { height, weight, types, stats, sprites } = pokemonData;
+			const color = types[0].type.name;
 
-		const embed = new MessageEmbed({
-			color: colors[color],
-			title: utils.capitalize(pokemon),
-			thumbnail: { url: sprites.front_default },
-			fields: [
-				{ name: language.lookup('pokemon.stats.height','de'), value: `${height}`, inline: true },
-				{ name: language.lookup('pokemon.stats.weight','de'), value: `${weight}`, inline: true },
-				{ name: language.lookup('pokemon.types.types','de'), value: types.map(type => language.lookup(`pokemon.types.${type.type.name}`,'de')).join(', ') },
-				{ name: language.lookup('pokemon.stats.base','de'), value: stats.map(stat => language.lookup(`pokemon.stats.${stat.stat.name}`,'de') + `: ${stat.base_stat}`).join('\r\n') },
-			],
-		});
-
-		await interaction.editReply({ embeds: [embed] });
+			const embed = new MessageEmbed({
+				color: colors[color],
+				title: utils.capitalize(pokemon),
+				thumbnail: { url: sprites.front_default },
+				fields: [
+					{ name: language.lookup('pokemon.stats.height','de'), value: `${height}`, inline: true },
+					{ name: language.lookup('pokemon.stats.weight','de'), value: `${weight}`, inline: true },
+					{ name: language.lookup('pokemon.types.types','de'), value: types.map(type => utils.capitalize(language.lookup(`pokemon.types.${type.type.name}`,'de'))).join(', ') },
+					{ name: language.lookup('pokemon.stats.base','de'), value: stats.map(stat => language.lookup(`pokemon.stats.${stat.stat.name}`,'de') + `: ${stat.base_stat}`).join('\r\n') },
+				],
+			});
+			
+			await interaction.editReply({ embeds: [embed] });
+		} catch (error) {
+			return interaction.editReply('Das angefragte Pokemon konnte nicht gefunden werden.');
+		}
 	},
 };
