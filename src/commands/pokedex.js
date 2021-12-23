@@ -36,10 +36,10 @@ module.exports = {
 					{ name: language.lookup('pokemon.stats.base','de'), value: stats.map(stat => language.lookup(`pokemon.stats.${stat.stat.name}`,'de') + `: ${stat.base_stat}`).join('\r\n') },
 				],
 			});
-			
+
 			await interaction.editReply({ embeds: [embed] });
 		} catch (error) {
-			return interaction.editReply('Das angefragte Pokemon konnte nicht gefunden werden.');
+			return interaction.editReply(language.lookup('command.pokedex.error','de'));
 		}
 	},
 };
