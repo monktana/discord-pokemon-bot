@@ -11,14 +11,14 @@ module.exports = {
 		.setDescription(language.lookup('command.pokedex.description', 'de'))
 		.addStringOption(option =>
 			option.setName(language.lookup('option.pokemon.name', 'de'))
-				.setDescription(language.lookup('option.pokemon.description', 'de'))
-				.setRequired(true),
+						.setDescription(language.lookup('option.pokemon.description', 'de'))
+						.setRequired(true),
 		),
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		const pokemon = interaction.options.getString(language.lookup('option.pokemon.name', 'de')).toLowerCase();
-		const searchTerm = language.translate(pokemon, 'de', 'en');
+		const pokemon = interaction.options.getString(language.lookup('option.pokemon.name', 'de'));
+		const searchTerm = language.translate(pokemon.toLowerCase(), 'de', 'en');
 
 		try {
 			const pokemonData = await PokemonService.getPokemon(searchTerm);
@@ -32,8 +32,8 @@ module.exports = {
 				fields: [
 					{ name: language.lookup('pokemon.stats.height','de'), value: `${height}`, inline: true },
 					{ name: language.lookup('pokemon.stats.weight','de'), value: `${weight}`, inline: true },
-					{ name: language.lookup('pokemon.types.types','de'), value: types.map(type => utils.capitalize(language.lookup(`pokemon.types.${type.type.name}`,'de'))).join(', ') },
-					{ name: language.lookup('pokemon.stats.base','de'), value: stats.map(stat => language.lookup(`pokemon.stats.${stat.stat.name}`,'de') + `: ${stat.base_stat}`).join('\r\n') },
+					{ name: language.lookup('pokemon.types.types','de'), value: types.map(formatType).join(', ') },
+					{ name: language.lookup('pokemon.stats.base','de'), value: stats.map(formatStat).join('\r\n') },
 				],
 			});
 
@@ -43,3 +43,11 @@ module.exports = {
 		}
 	},
 };
+
+function formatType(type) {
+	return utils.capitalize(language.lookup(`pokemon.types.${type.type.name}`,'de'));
+}
+
+function formatStat(stat) {
+	return language.lookup(`pokemon.stats.${stat.stat.name}`,'de') + `: ${stat.base_stat}`;
+}
