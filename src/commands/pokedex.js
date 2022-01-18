@@ -1,53 +1,51 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const PokemonService = require('../services/pokemon-service');
-const colors = require('../utils/colors');
-const utils = require('../utils/utils');
-const language = require('../utils/language');
+const { capitalize, colors, language } = require('../utils/utils');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName(language.lookup('command.pokedex.name', 'de'))
-		.setDescription(language.lookup('command.pokedex.description', 'de'))
+		.setName(language.lookup('command.pokedex.name', 'en'))
+		.setDescription(language.lookup('command.pokedex.description', 'en'))
 		.addStringOption(option =>
-			option.setName(language.lookup('option.pokemon.name', 'de'))
-						.setDescription(language.lookup('option.pokemon.description', 'de'))
-						.setRequired(true),
+			option.setName(language.lookup('option.pokemon.name', 'en'))
+				.setDescription(language.lookup('option.pokemon.description', 'en'))
+				.setRequired(true),
 		),
+
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		const pokemon = interaction.options.getString(language.lookup('option.pokemon.name', 'de'));
-		const searchTerm = language.translate(pokemon.toLowerCase(), 'de', 'en');
+		const pokemon = interaction.options.getString(language.lookup('option.pokemon.name', 'en'));
+		let searchTerm = pokemon.toLowerCase();
 
-		try {
-			const pokemonData = await PokemonService.getPokemon(searchTerm);
-			const { height, weight, types, stats, sprites } = pokemonData;
-			const color = types[0].type.name;
+		const pokemonData = await PokemonService.getPokemon(searchTerm);
+		const { name, height, weight, types, stats } = pokemonData;
+		const color = types[0].name;
 
-			const embed = new MessageEmbed({
-				color: colors[color],
-				title: utils.capitalize(pokemon),
-				thumbnail: { url: sprites.front_default },
-				fields: [
-					{ name: language.lookup('pokemon.stats.height','de'), value: `${height}`, inline: true },
-					{ name: language.lookup('pokemon.stats.weight','de'), value: `${weight}`, inline: true },
-					{ name: language.lookup('pokemon.types.types','de'), value: types.map(formatType).join(', ') },
-					{ name: language.lookup('pokemon.stats.base','de'), value: stats.map(formatStat).join('\r\n') },
-				],
-			});
+		const embed = new MessageEmbed({
+			color: colors[color],
+			title: capitalize(name),
+			fields: [
+				{ name: language.lookup('pokemon.stats.height', 'en'), value: `${height}`, inline: true },
+				{ name: language.lookup('pokemon.stats.weight', 'en'), value: `${weight}`, inline: true },
+				{ name: language.lookup('pokemon.types.types', 'en'), value: this.formatTypes(types) },
+				{ name: language.lookup('pokemon.stats.base', 'en'), value: this.formatStats(stats) },
+			],
+		});
 
-			await interaction.editReply({ embeds: [embed] });
-		} catch (error) {
-			return interaction.editReply(language.lookup('command.pokedex.error','de'));
-		}
+		return interaction.editReply({ embeds: [embed] });
+	},
+
+	formatTypes(types) {
+		return types.map(type => {
+			return capitalize(language.lookup(`pokemon.types.${type.name}`, 'en'));
+		}).join(', ');
+	},
+	
+	formatStats(stats) {
+		return stats.map(stat => {
+			return language.lookup(`pokemon.stats.${stat.name}`, 'en') + `: ${stat.base_stat}`;
+		}).join('\r\n');
 	},
 };
-
-function formatType(type) {
-	return utils.capitalize(language.lookup(`pokemon.types.${type.type.name}`,'de'));
-}
-
-function formatStat(stat) {
-	return language.lookup(`pokemon.stats.${stat.stat.name}`,'de') + `: ${stat.base_stat}`;
-}
