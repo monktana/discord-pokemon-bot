@@ -1,9 +1,11 @@
-import { typematchups } from './typematchups';
-import * as Colors from './colors';
-import * as Language from './language';
+const Typematchups = require('./typematchups');
+const Colors = require('./colors');
+const Language = require('./language');
 
-function capitalize(string) {
+module.exports.capitalize = function(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
 
-export { typematchups, Colors, Language, capitalize };
+module.exports.Colors = Colors;
+module.exports.Language = Language;
+module.exports.Typematchups = Typematchups;

@@ -1,4 +1,4 @@
-export const typematchups = {
+module.exports.Typematchups = {
 	'normal': {
 		'normal': 1,
 		'fire': 1,

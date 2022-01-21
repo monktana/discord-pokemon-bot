@@ -1,20 +1,23 @@
 const fs = require('fs');
+const LanguageError = require('../errors/languageError');
 
 let translator = null;
 
 module.exports.isSupported = function(targetLanguage) {
-	return this.getTranslator().keys().includes(targetLanguage);
+	return Object.keys(this.getTranslator()).includes(targetLanguage);
 };
 
-module.exports.lookup = function(key, targetLanguage) {
-	return this.getTranslator()[targetLanguage][key];
-};
+module.exports.lookup = function(key, targetLanguage = 'en') {
+	if (!this.isSupported(targetLanguage)) {
+		throw new LanguageError(`Language '${targetLanguage}' is currently unsupported`);
+	}
 
-module.exports.translate = function(term, sourceLanguage, targetLanguage) {
-	const source = this.getTranslator()[sourceLanguage];
-	const termKey = Object.entries(source).find(entry => entry[1] == term)[0];
-
-	return this.lookup(termKey, targetLanguage);
+	try {
+		return this.getTranslator()[targetLanguage][key];
+	}
+	catch (error) {
+		throw new LanguageError(`Could not look up '${key}' for language '${targetLanguage}': ${error}`);
+	}
 };
 
 module.exports.getTranslator = function() {
@@ -22,15 +25,21 @@ module.exports.getTranslator = function() {
 		return translator;
 	}
 
-	translator = {};
-	const languageFiles = fs.readdirSync('./src/languages').filter(file => file.endsWith('.json'));
+	try {
+		translator = {};
+		const languageFiles = fs.readdirSync('./src/languages').filter(file => file.endsWith('.json'));
 
-	for (const file of languageFiles) {
-		const language = JSON.parse(fs.readFileSync(`./src/languages/${file}`));
-		const languageKey = file.replace('.json', '');
+		for (const file of languageFiles) {
+			const fileContent = fs.readFileSync(`./src/languages/${file}`).toString();
+			const language = JSON.parse(fileContent);
+			const languageKey = file.replace('.json', '');
 
-		translator[languageKey] = language;
+			translator[languageKey] = language;
+		}
+
+		return translator;
 	}
-
-	return translator;
+	catch (error) {
+		throw new LanguageError(`Failed to setup translator: ${error}`);
+	}
 };
