@@ -1,4 +1,4 @@
-module.exports = {
+export const TypeColors = {
 	normal: '#A8A77A',
 	fire: '#EE8130',
 	water: '#6390F0',
