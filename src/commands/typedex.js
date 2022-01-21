@@ -5,27 +5,27 @@ const { capitalize, colors, language, typematchups } = require('../utils/utils')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName(language.lookup('command.typedex.name', 'de'))
-		.setDescription(language.lookup('command.typedex.description', 'de'))
+		.setName(language.lookup('command.typedex.name', 'en'))
+		.setDescription(language.lookup('command.typedex.description', 'en'))
 		.addStringOption(option =>
-			option.setName(language.lookup('option.type.attacking', 'de'))
-				.setDescription(language.lookup('option.type.description', 'de'))
+			option.setName(language.lookup('option.type.attacking', 'en'))
+				.setDescription(language.lookup('option.type.description', 'en'))
 				.setRequired(true),
 		)
 		.addStringOption(option =>
-			option.setName(language.lookup('option.type.defending', 'de'))
-				.setDescription(language.lookup('option.type.description', 'de'))
+			option.setName(language.lookup('option.type.defending', 'en'))
+				.setDescription(language.lookup('option.type.description', 'en'))
 				.setRequired(false),
 		),
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		const attackingType = interaction.options.getString(language.lookup('option.type.attacking', 'de'));
-		const attackingTypeEN = language.translate(attackingType.toLowerCase(), 'de', 'en');
+		const attackingType = interaction.options.getString(language.lookup('option.type.attacking', 'en'));
+		const attackingTypeEN = language.translate(attackingType.toLowerCase(), 'en', 'en');
 
-		const defendingType = interaction.options.getString(language.lookup('option.type.defending', 'de'));
+		const defendingType = interaction.options.getString(language.lookup('option.type.defending', 'en'));
 		if (defendingType) {
-			const defendingTypeEN = language.translate(defendingType.toLowerCase(), 'de', 'en');
+			const defendingTypeEN = language.translate(defendingType.toLowerCase(), 'en', 'en');
 			const effectiveness = typematchups[attackingTypeEN][defendingTypeEN];
 
 			return await interaction.editReply(parseEffectiveness(effectiveness));
@@ -41,34 +41,34 @@ module.exports = {
 			fields: [],
 		});
 
-		const effectiveFieldValue = effectiveMatchups.map(formatMatchup).join('\r\n');
-		embed.fields.push({ name: language.lookup('pokemon.effectiveness.veryeffective', 'de'), value: effectiveFieldValue });
+		const effectiveFieldValue = effectiveMatchups.map(this.formatMatchup).join('\r\n');
+		embed.fields.push({ name: language.lookup('pokemon.effectiveness.veryeffective', 'en'), value: effectiveFieldValue });
 
-		const notEffectiveFieldValue = notEffectiveMatchups.map(formatMatchup).join('\r\n');
-		embed.fields.push({ name: language.lookup('pokemon.effectiveness.notveryeffective', 'de'), value: notEffectiveFieldValue });
+		const notEffectiveFieldValue = notEffectiveMatchups.map(this.formatMatchup).join('\r\n');
+		embed.fields.push({ name: language.lookup('pokemon.effectiveness.notveryeffective', 'en'), value: notEffectiveFieldValue });
 
 		await interaction.editReply({ embeds: [embed] });
 	},
-};
 
-function parseEffectiveness(effectiveness) {
-	switch (effectiveness) {
-	case 0:
-		return language.lookup('pokemon.effectiveness.noeffect', 'de');
-	case 0.50:
-		return language.lookup('pokemon.effectiveness.notveryeffective', 'de');
-	case 1:
-		return language.lookup('pokemon.effectiveness.effective', 'de');
-	case 2:
-		return language.lookup('pokemon.effectiveness.veryeffective', 'de');
-	default:
-		return language.lookup('pokemon.effectiveness.unknown', 'de');
+	parseEffectiveness(effectiveness) {
+		switch (effectiveness) {
+		case 0:
+			return language.lookup('pokemon.effectiveness.noeffect', 'en');
+		case 0.50:
+			return language.lookup('pokemon.effectiveness.notveryeffective', 'en');
+		case 1:
+			return language.lookup('pokemon.effectiveness.effective', 'en');
+		case 2:
+			return language.lookup('pokemon.effectiveness.veryeffective', 'en');
+		default:
+			return language.lookup('pokemon.effectiveness.unknown', 'en');
+		}
+	},
+	
+	formatMatchup(matchup) {
+		const type = capitalize(language.lookup(`pokemon.types.${matchup[0]}`, 'en'));
+		const effectiveness = this.parseEffectiveness(matchup[1]);
+	
+		return `${type}: ${effectiveness}`;
 	}
-}
-
-function formatMatchup(matchup) {
-	const type = capitalize(language.lookup(`pokemon.types.${matchup[0]}`, 'de'));
-	const effectiveness = parseEffectiveness(matchup[1]);
-
-	return `${type}: ${effectiveness}`;
-}
+};

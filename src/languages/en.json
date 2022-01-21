@@ -37,7 +37,7 @@
   "command.pokedex.name": "pokédex",
   "command.pokedex.description": "Shows the Pokédex entry of a Pokémon",
   "command.typedex.error": "",
-  "command.typedex.name": "type matchups",
+  "command.typedex.name": "typedex",
   "command.typedex.description": "Shows how effective one type is against another",
   "option.pokemon.name": "pokémon",
   "option.pokemon.description": "Name of the Pokémon",
