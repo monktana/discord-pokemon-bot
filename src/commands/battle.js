@@ -1,21 +1,21 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const PokemonService = require('../services/pokemon-service');
-const { capitalize, parseEffectiveness, Language } = require('../utils/utils');
+const { capitalize, Language } = require('../utils/utils');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName(Language.lookup('command.battle.name', 'en'))
-		.setDescription(Language.lookup('command.battle.description', 'en'))
+		.setName(Language.lookup('command.battle.name'))
+		.setDescription(Language.lookup('command.battle.description'))
 		.addStringOption(option =>
-			option.setName(Language.lookup('option.pokemon.name', 'en'))
-				.setDescription(Language.lookup('option.pokemon.description', 'en'))
+			option.setName(Language.lookup('option.pokemon.name'))
+				.setDescription(Language.lookup('option.pokemon.description'))
 				.setRequired(true),
 		),
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		const parameter = interaction.options.getString(Language.lookup('option.pokemon.name', 'en'), true);
+		const parameter = interaction.options.getString(Language.lookup('option.pokemon.name'), true);
 		const searchTerm = parameter.toLowerCase();
     
 		const pokemon = await PokemonService.getPokemon(searchTerm);
@@ -30,18 +30,21 @@ module.exports = {
 		});
 
 		const effectiveFieldValue = effectiveMatchups.map(this.formatMatchup).join('\r\n');
-		embed.fields.push({ name: Language.lookup('pokemon.effectiveness.veryeffective', 'en'), value: effectiveFieldValue });
+		embed.fields.push({ 
+			name: '✅ ' + Language.lookup('pokemon.effectiveness.veryeffective'),
+			value: effectiveFieldValue
+		});
 
 		const notEffectiveFieldValue = notEffectiveMatchups.map(this.formatMatchup).join('\r\n');
-		embed.fields.push({ name: Language.lookup('pokemon.effectiveness.notveryeffective', 'en'), value: notEffectiveFieldValue });
+		embed.fields.push({ 
+			name: '❌ ' + Language.lookup('pokemon.effectiveness.notveryeffective'),
+			value: notEffectiveFieldValue
+		});
 
 		await interaction.editReply({ embeds: [embed] });
 	},
 
 	formatMatchup: function (matchup) {
-		const type = capitalize(Language.lookup(`pokemon.types.${matchup.attacker}`, 'en'));
-		const effectiveness = parseEffectiveness(matchup.effectivness);
-
-		return `${type}: ${effectiveness}`;
+		return capitalize(Language.lookup(`pokemon.types.${matchup.attacker}`));
 	},
 };

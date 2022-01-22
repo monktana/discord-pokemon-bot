@@ -1,4 +1,4 @@
-module.exports.Typematchups = {
+module.exports = {
 	'normal': {
 		'normal': 1,
 		'fire': 1,
