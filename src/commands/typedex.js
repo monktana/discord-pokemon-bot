@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
+const PokemonService = require('../services/pokemon-service');
 const { capitalize, TypeColors, Language, Typematchups } = require('../utils/utils');
 
 module.exports = {
@@ -22,32 +23,40 @@ module.exports = {
 		const parameter = interaction.options.getString(Language.lookup('option.type.first'), true);
 		const searchTerm = parameter.toLowerCase();
 
-		const matchups = Object.entries(Typematchups[searchTerm]);
-		const veryEffectiveMatchups = matchups.filter(matchup => matchup[1] > 1);
-		const notEffectiveMatchups = matchups.filter(matchup => matchup[1] < 1);
+		const type = await PokemonService.getType(searchTerm);
 
 		const embed = new MessageEmbed({
-			color: TypeColors[searchTerm],
-			title: capitalize(searchTerm),
+			color: TypeColors[type.name],
+			title: capitalize(type.name),
 			fields: [],
 		});
 
-		const veryEffectiveFieldValue = veryEffectiveMatchups.map(this.formatMatchup).join(', ');
-		embed.fields.push({ 
-			name: '✅ ' + Language.lookup('pokemon.effectiveness.veryeffective'), 
-			value: veryEffectiveFieldValue
-		});
+		const veryEffectiveTypes = type.matchups.double_damage_to.map(this.formatMatchup).join(', ');
+		if (veryEffectiveTypes) {
+			embed.fields.push({ 
+				name: '✅ ' + Language.lookup('pokemon.effectiveness.veryeffective'), 
+				value: veryEffectiveTypes
+			});
+		}
 
-		const notEffectiveFieldValue = notEffectiveMatchups.map(this.formatMatchup).join(', ');
+		const notEffectiveTypes = type.matchups.half_damage_to.map(this.formatMatchup).join(', ');
 		embed.fields.push({ 
 			name: '❌ ' + Language.lookup('pokemon.effectiveness.notveryeffective'), 
-			value: notEffectiveFieldValue
+			value: notEffectiveTypes
 		});
+		
+		const noEffectTypes = type.matchups.no_damage_to.map(this.formatMatchup).join(', ');
+		if (noEffectTypes) {
+			embed.fields.push({ 
+				name: '🚫 ' + Language.lookup('pokemon.effectiveness.noeffect'), 
+				value: noEffectTypes
+			});
+		}
 
 		await interaction.editReply({ embeds: [embed] });
 	},
 
 	formatMatchup(matchup) {
-		return capitalize(Language.lookup(`pokemon.types.${matchup[0]}`));
+		return capitalize(Language.lookup(`pokemon.types.${matchup.name}`));
 	},
 };
