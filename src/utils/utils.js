@@ -1,4 +1,3 @@
-const Typematchups = require('./typematchups');
 const TypeColors = require('./colors');
 const Language = require('./language');
 
@@ -23,4 +22,3 @@ module.exports.parseEffectiveness = function(effectiveness) {
 
 module.exports.TypeColors = TypeColors;
 module.exports.Language = Language;
-module.exports.Typematchups = Typematchups;

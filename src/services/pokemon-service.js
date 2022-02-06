@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 module.exports.getPokemon = async function(name) {
-	const response = await fetch(`http://localhost:5001/pokemon-api-d5ce5/us-central1/api/pokemon/${name}`);
+	const response = await fetch(`http://localhost:5000/pokemon?name=${name}`);
 	if (!response.ok) {
 		throw Error(response.statusText);
 	}
@@ -10,7 +10,7 @@ module.exports.getPokemon = async function(name) {
 };
 
 module.exports.getType = async function(name) {
-	const response = await fetch(`http://localhost:5001/pokemon-api-d5ce5/us-central1/api/types/${name}`);
+	const response = await fetch(`http://localhost:5000/types?name=${name}`);
 	if (!response.ok) {
 		throw Error(response.statusText);
 	}

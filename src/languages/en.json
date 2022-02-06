@@ -7,6 +7,8 @@
   "command.typedex.description": "Get information about different type matchups.",
   "subcommand.type.name": "type",
   "subcommand.type.description": "Strenghts and weaknesses of a type.",
+  "subcommand.pokemon.name": "pokémon",
+  "subcommand.pokemon.description": "Strenghts and weaknesses of a pokémon.",
   "command.battle.error": "",
   "command.battle.name": "battle",
   "command.battle.description": "Displays the type defenses of a Pokémon",
