@@ -9,6 +9,16 @@ module.exports.getPokemon = async function(name) {
 	return await response.json();
 };
 
+module.exports.getRandomPokemon = async function() {
+	const index = getRandomArbitrary(898)
+	const response = await fetch(`http://localhost:5000/pokemon?ids=${index}`);
+	if (!response.ok) {
+		throw Error(response.statusText);
+	}
+
+	return await response.json();
+};
+
 module.exports.getType = async function(name) {
 	const response = await fetch(`http://localhost:5000/types?name=${name}`);
 	if (!response.ok) {
@@ -17,3 +27,17 @@ module.exports.getType = async function(name) {
 
 	return await response.json();
 };
+
+module.exports.getRandomType = async function(name) {
+	const index = getRandomArbitrary(18)
+	const response = await fetch(`http://localhost:5000/types?ids=${index}`);
+	if (!response.ok) {
+		throw Error(response.statusText);
+	}
+
+	return await response.json();
+};
+
+function getRandomArbitrary(max) {
+  return Math.floor(Math.random() * (max - 1 + 1)) + 1;
+}
