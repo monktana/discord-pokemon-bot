@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const PokemonService = require('../services/pokemon-service');
-const { capitalize, TypeColors, Language } = require('../utils/utils');
+const { capitalize, Language } = require('../utils/utils');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,14 +10,14 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply({ fetchReply: true });
     
-    let pokemon = await PokemonService.getRandomPokemon();
-    pokemon = pokemon.results[0];
-    let type = await PokemonService.getRandomType();
-    type = type.results[0];
+    const pokemon = await PokemonService.getRandomPokemon();
+    const typesOfPokemon = await Promise.all(pokemon.types.map(type => PokemonService.getType(type.name)));
+    const attackingType = await PokemonService.getRandomType();
 
-    const effectiveness = this.getEffectiveness(pokemon, type).toLowerCase();
+    const effectiveness = this.getEffectiveness(attackingType, typesOfPokemon).toLowerCase();
 
-    const question = `You're attacking ${pokemon.name} with a(n) ${type.name}. Which effectiveness will the attack have?`;
+    const question = `You're attacking ${capitalize(pokemon.name)} with a(n) ${capitalize(attackingType.name)} move. How effective will it be?`;
+
     const filter = (response) => {
       return response.content.toLowerCase().includes(effectiveness);
     }
@@ -31,13 +31,19 @@ module.exports = {
     }
 	},
 
-  getEffectiveness(pokemon, type) {
+  getEffectiveness(attackingType, defendingTypes) {
+    const total = defendingTypes.reduce((previous, current) => {
+      const defendingType = current.results[0].name
+      const matchup = attackingType.matchups.find((def) => def.name === defendingType)
+      return previous * matchup.matchup.effectiveness
+    }, 1)
+
     switch (true) {
-      case pokemon.type_defenses.double_damage_from.includes(type.name):
+      case total >= 2:
         return Language.lookup('pokemon.effectiveness.veryeffective');
-      case pokemon.type_defenses.half_damage_from.includes(type.name):
+      case total > 0 && total < 1:
         return Language.lookup('pokemon.effectiveness.notveryeffective');
-      case pokemon.type_defenses.no_damage_from.includes(type.name):
+      case total === 0:
         return Language.lookup('pokemon.effectiveness.noeffect');
       default:
         return Language.lookup('pokemon.effectiveness.effective');

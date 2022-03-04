@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
-const PokemonService = require('../services/pokemon-service');
 const { capitalize, TypeColors, Language } = require('../utils/utils');
+const PokemonService = require('../services/pokemon-service');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -36,8 +36,7 @@ module.exports = {
 		const parameter = interaction.options.getString(Language.lookup('option.type.first'), true);
 		const searchTerm = parameter.toLowerCase();
 
-		const response = await PokemonService.getType(searchTerm);
-		const type = response.results[0];
+		const type = await PokemonService.getType(searchTerm).results[0];
 
 		const embed = new MessageEmbed({
 			color: TypeColors[type.name],
@@ -45,7 +44,12 @@ module.exports = {
 			fields: [],
 		});
 
-		const veryEffectiveTypes = type.matchups.double_damage_to.map(this.formatMatchup).join(', ');
+		embed.fields.push({
+			name: Language.lookup('types.pokemon.count'),
+			value: `${type.pokemon.length}`,
+		});
+
+		const veryEffectiveTypes = type.matchups.filter(matchup => matchup.matchup.effectiveness >= 2).map(this.formatMatchup).join(', ');
 		if (veryEffectiveTypes) {
 			embed.fields.push({
 				name: '✅ ' + Language.lookup('pokemon.effectiveness.veryeffective'),
@@ -53,13 +57,13 @@ module.exports = {
 			});
 		}
 
-		const notEffectiveTypes = type.matchups.half_damage_to.map(this.formatMatchup).join(', ');
+		const notEffectiveTypes = type.matchups.filter(matchup => (matchup.matchup.effectiveness > 0 && matchup.matchup.effectiveness < 1 )).map(this.formatMatchup).join(', ');
 		embed.fields.push({
 			name: '❌ ' + Language.lookup('pokemon.effectiveness.notveryeffective'),
 			value: notEffectiveTypes,
 		});
 
-		const noEffectTypes = type.matchups.no_damage_to.map(this.formatMatchup).join(', ');
+		const noEffectTypes = type.matchups.filter(matchup => matchup.matchup.effectiveness === 0 ).map(this.formatMatchup).join(', ');
 		if (noEffectTypes) {
 			embed.fields.push({
 				name: '🚫 ' + Language.lookup('pokemon.effectiveness.noeffect'),
@@ -109,6 +113,6 @@ module.exports = {
 	},
 
 	formatMatchup(matchup) {
-		return capitalize(Language.lookup(`pokemon.types.${matchup}`));
+		return capitalize(Language.lookup(`pokemon.types.${matchup.name}`));
 	},
 };

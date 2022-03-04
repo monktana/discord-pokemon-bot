@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 module.exports.getPokemon = async function(name) {
-	const response = await fetch(`http://localhost:5000/pokemon?name=${name}`);
+	const response = await fetch(`${process.env.API_URL}/pokemon?name=${name}`);
 	if (!response.ok) {
 		throw Error(response.statusText);
 	}
@@ -11,7 +11,7 @@ module.exports.getPokemon = async function(name) {
 
 module.exports.getRandomPokemon = async function() {
 	const index = getRandomArbitrary(898)
-	const response = await fetch(`http://localhost:5000/pokemon?ids=${index}`);
+	const response = await fetch(`${process.env.API_URL}/pokemon/${index}`);
 	if (!response.ok) {
 		throw Error(response.statusText);
 	}
@@ -20,7 +20,7 @@ module.exports.getRandomPokemon = async function() {
 };
 
 module.exports.getType = async function(name) {
-	const response = await fetch(`http://localhost:5000/types?name=${name}`);
+	const response = await fetch(`${process.env.API_URL}/types?name=${name}`);
 	if (!response.ok) {
 		throw Error(response.statusText);
 	}
@@ -30,7 +30,7 @@ module.exports.getType = async function(name) {
 
 module.exports.getRandomType = async function(name) {
 	const index = getRandomArbitrary(18)
-	const response = await fetch(`http://localhost:5000/types?ids=${index}`);
+	const response = await fetch(`${process.env.API_URL}/types/${index}`);
 	if (!response.ok) {
 		throw Error(response.statusText);
 	}

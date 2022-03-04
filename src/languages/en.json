@@ -17,6 +17,7 @@
   "option.type.second": "pokémon-type",
   "option.type.description": "The type of a Pokémon.",
 
+  "types.pokemon.count": "Pokémon with this type",
   "pokemon.types.types": "Types",
   "pokemon.types.type": "Type",
   "pokemon.types.normal": "normal",
@@ -37,6 +38,8 @@
   "pokemon.types.dark": "dark",
   "pokemon.types.steel": "steel",
   "pokemon.types.fairy": "fairy",
+  "pokemon.pokedex.id": "National No.",
+  "pokemon.pokedex.entry": "Pokémon Entry",
   "pokemon.stats.base": "Base stats",
   "pokemon.stats.height": "Height",
   "pokemon.stats.weight": "Weight",
