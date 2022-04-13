@@ -13,23 +13,10 @@ module.exports = {
 				.addStringOption(option => option.setName(Language.lookup('option.type.first'))
 					.setDescription(Language.lookup('option.type.description'))
 					.setRequired(true)),
-		)
-		.addSubcommand(subcommand =>
-			subcommand.setName(Language.lookup('subcommand.pokemon.name'))
-				.setDescription(Language.lookup('subcommand.pokemon.description'))
-				.addStringOption(option => option.setName(Language.lookup('option.pokemon.name'))
-					.setDescription(Language.lookup('option.pokemon.description'))
-					.setRequired(true)),
 		),
 	async execute(interaction) {
 		await interaction.deferReply();
-		if (interaction.options.getSubcommand() === Language.lookup('subcommand.type.name')) {
-			await this.typeSubcommand(interaction);
-		}
-
-		if (interaction.options.getSubcommand() === Language.lookup('subcommand.pokemon.name')) {
-			await this.pokemonSubcommand(interaction);
-		}
+		await this.typeSubcommand(interaction);
 	},
 
 	async typeSubcommand(interaction) {
@@ -57,51 +44,13 @@ module.exports = {
 			});
 		}
 
-		const notEffectiveTypes = type.matchups.filter(matchup => (matchup.matchup.effectiveness > 0 && matchup.matchup.effectiveness < 1 )).map(this.formatMatchup).join(', ');
+		const notEffectiveTypes = type.matchups.filter(matchup => (matchup.matchup.effectiveness > 0 && matchup.matchup.effectiveness < 1)).map(this.formatMatchup).join(', ');
 		embed.fields.push({
 			name: '❌ ' + Language.lookup('pokemon.effectiveness.notveryeffective'),
 			value: notEffectiveTypes,
 		});
 
-		const noEffectTypes = type.matchups.filter(matchup => matchup.matchup.effectiveness === 0 ).map(this.formatMatchup).join(', ');
-		if (noEffectTypes) {
-			embed.fields.push({
-				name: '🚫 ' + Language.lookup('pokemon.effectiveness.noeffect'),
-				value: noEffectTypes,
-			});
-		}
-
-		await interaction.editReply({ embeds: [embed] });
-	},
-
-	async pokemonSubcommand(interaction) {
-		const parameter = interaction.options.getString(Language.lookup('option.pokemon.name'), true);
-		const searchTerm = parameter.toLowerCase();
-
-		const response = await PokemonService.getPokemon(searchTerm);
-		const pokemon = response.results[0];
-
-		const embed = new MessageEmbed({
-			color: TypeColors[pokemon.types[0]],
-			title: capitalize(pokemon.name),
-			fields: [],
-		});
-
-		const veryEffectiveTypes = pokemon.type_defenses.double_damage_from.map(this.formatMatchup).join(', ');
-		if (veryEffectiveTypes) {
-			embed.fields.push({
-				name: '✅ ' + Language.lookup('pokemon.effectiveness.veryeffective'),
-				value: veryEffectiveTypes,
-			});
-		}
-
-		const notEffectiveTypes = pokemon.type_defenses.half_damage_from.map(this.formatMatchup).join(', ');
-		embed.fields.push({
-			name: '❌ ' + Language.lookup('pokemon.effectiveness.notveryeffective'),
-			value: notEffectiveTypes,
-		});
-
-		const noEffectTypes = pokemon.type_defenses.no_damage_from.map(this.formatMatchup).join(', ');
+		const noEffectTypes = type.matchups.filter(matchup => matchup.matchup.effectiveness === 0).map(this.formatMatchup).join(', ');
 		if (noEffectTypes) {
 			embed.fields.push({
 				name: '🚫 ' + Language.lookup('pokemon.effectiveness.noeffect'),

@@ -1,4 +1,5 @@
 const TypeColors = require('./colors');
+const TypeMatrix = require('./typematchups');
 const Language = require('./language');
 
 module.exports.capitalize = function(string) {
@@ -9,6 +10,7 @@ module.exports.parseEffectiveness = function(effectiveness) {
 	switch (effectiveness) {
 	case 0:
 		return Language.lookup('pokemon.effectiveness.noeffect', 'en');
+	case 0.25:
 	case 0.50:
 		return Language.lookup('pokemon.effectiveness.notveryeffective', 'en');
 	case 1:
@@ -21,4 +23,5 @@ module.exports.parseEffectiveness = function(effectiveness) {
 },
 
 module.exports.TypeColors = TypeColors;
+module.exports.TypeMatrix = TypeMatrix;
 module.exports.Language = Language;
