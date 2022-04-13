@@ -1,6 +1,5 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const CONFIG = require('../config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
@@ -24,4 +23,4 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(CONFIG.TOKEN);
+client.login(process.env.TOKEN);
