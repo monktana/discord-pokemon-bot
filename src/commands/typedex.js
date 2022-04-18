@@ -14,10 +14,7 @@ module.exports = {
 		
 	async execute(interaction) {
 		await interaction.deferReply();
-		await this.typeSubcommand(interaction);
-	},
-
-	async typeSubcommand(interaction) {
+		
 		const parameter = interaction.options.getString(Language.lookup('option.type.first'), true);
 		const searchTerm = parameter.toLowerCase();
 

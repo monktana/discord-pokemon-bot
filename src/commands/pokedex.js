@@ -73,12 +73,6 @@ module.exports = {
 		return `${capitalize(Language.lookup(`pokemon.types.${matchup.name}`))} (${matchup.matchup.effectiveness}x)`;
 	},
 
-	formatMatchups(matchups) {
-		return matchups.reduce((accumulator, matchup) => {
-			return `${accumulator}${capitalize(Language.lookup(`pokemon.types.${matchup.name}`, 'en'))}: ${parseEffectiveness(matchup.matchup.effectiveness)} (${matchup.matchup.effectiveness}x)\n`;
-		}, '');
-	},
-
 	formatTypes(types) {
 		return types.map(type => {
 			return capitalize(Language.lookup(`pokemon.types.${type.name}`, 'en'));
