@@ -38,8 +38,10 @@
   "pokemon.types.dark": "dark",
   "pokemon.types.steel": "steel",
   "pokemon.types.fairy": "fairy",
+
   "pokemon.pokedex.id": "National No.",
   "pokemon.pokedex.entry": "Pokémon Entry",
+
   "pokemon.stats.base": "Base stats",
   "pokemon.stats.height": "Height",
   "pokemon.stats.weight": "Weight",
@@ -49,14 +51,17 @@
   "pokemon.stats.special-attack": "Special Attack",
   "pokemon.stats.special-defense": "Special Defense",
   "pokemon.stats.speed": "Speed",
+
   "pokemon.effectiveness.defenses": "Type defenses",
   "pokemon.effectiveness.effectiveness": "Effectiveness",
   "pokemon.effectiveness.description": "Name",
+  "pokemon.effectiveness.none": "None",
   "pokemon.effectiveness.noeffect": "No effect",
   "pokemon.effectiveness.notveryeffective": "Not very effective",
   "pokemon.effectiveness.effective": "Effective",
-  "pokemon.effectiveness.veryeffective": "Very effective",
+  "pokemon.effectiveness.supereffective": "Super effective",
   "pokemon.effectiveness.unknown": "Unknown",
+
   "pokemon.name.bulbasaur": "bulbasaur",
   "pokemon.name.caterpie": "caterpie",
   "pokemon.name.voltorb": "voltorb",

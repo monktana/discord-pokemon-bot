@@ -43,11 +43,34 @@ module.exports = {
 				{ name: Language.lookup('pokemon.stats.height', 'en'), value: `${pokemon.height}`, inline: true },
 				{ name: Language.lookup('pokemon.stats.weight', 'en'), value: `${pokemon.weight}`, inline: true },
 				{ name: Language.lookup('pokemon.types.types', 'en'), value: this.formatTypes(pokemon.types) },
-				{ name: Language.lookup('pokemon.effectiveness.defenses', 'en'), value: this.formatMatchups(matchups) },
+				{ name: '\u200B', value: '\u200B' },
+				{ name: Language.lookup('pokemon.effectiveness.defenses', 'en'), value: '\u200B' },
 			],
 		});
 
+		const veryEffectiveTypes = matchups.filter(matchup => matchup.matchup.effectiveness >= 2).map(this.formatMatchup).join(', ');
+		embed.fields.push({
+			name: Language.lookup('pokemon.effectiveness.supereffective'),
+			value: veryEffectiveTypes || Language.lookup('pokemon.effectiveness.none'),
+		});
+
+		const notEffectiveTypes = matchups.filter(matchup => (matchup.matchup.effectiveness > 0 && matchup.matchup.effectiveness < 1)).map(this.formatMatchup).join(', ');
+		embed.fields.push({
+			name: Language.lookup('pokemon.effectiveness.notveryeffective'),
+			value: notEffectiveTypes || Language.lookup('pokemon.effectiveness.none'),
+		});
+
+		const noEffectTypes = matchups.filter(matchup => matchup.matchup.effectiveness === 0).map(this.formatMatchup).join(', ');
+		embed.fields.push({
+			name: Language.lookup('pokemon.effectiveness.noeffect'),
+			value: noEffectTypes || Language.lookup('pokemon.effectiveness.none'),
+		});
+
 		return interaction.editReply({ embeds: [embed] });
+	},
+
+	formatMatchup(matchup) {
+		return `${capitalize(Language.lookup(`pokemon.types.${matchup.name}`))} (${matchup.matchup.effectiveness}x)`;
 	},
 
 	formatMatchups(matchups) {

@@ -16,7 +16,7 @@ module.exports.parseEffectiveness = function(effectiveness) {
 	case 1:
 		return Language.lookup('pokemon.effectiveness.effective', 'en');
 	case 2:
-		return Language.lookup('pokemon.effectiveness.veryeffective', 'en');
+		return Language.lookup('pokemon.effectiveness.supereffective', 'en');
 	default:
 		return Language.lookup('pokemon.effectiveness.unknown', 'en');
 	}

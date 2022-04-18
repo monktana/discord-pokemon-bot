@@ -31,7 +31,7 @@
   "pokemon.effectiveness.noeffect": "Kein Effekt",
   "pokemon.effectiveness.notveryeffective": "Nicht sehr effektiv",
   "pokemon.effectiveness.effective": "Effektiv",
-  "pokemon.effectiveness.veryeffective": "Sehr effektiv",
+  "pokemon.effectiveness.supereffective": "Sehr effektiv",
   "pokemon.effectiveness.unknown": "Unbekannt",
   "command.pokedex.error": "Das angefragte Pokémon konnte nicht gefunden werden.",
   "command.pokedex.name": "pokédex",
