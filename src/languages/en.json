@@ -13,6 +13,7 @@
   "command.test.description": "Tests your knowledge about pokemon typing.",
   "command.attack.name": "attack",
   "command.attack.description": "Attack a Pokémon with a type.",
+  "command.attack.answer": "Attacking %s with a(n) %s attack is: %s (%dx).",
   "option.pokemon.name": "pokémon",
   "option.pokemon.description": "Name of the Pokémon",
   "option.type.first": "pokémon-type",
