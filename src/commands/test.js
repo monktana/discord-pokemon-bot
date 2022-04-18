@@ -41,7 +41,7 @@ module.exports = {
 
 		switch (true) {
 		case total >= 2:
-			return Language.lookup('pokemon.effectiveness.veryeffective');
+			return Language.lookup('pokemon.effectiveness.supereffective');
 		case total > 0 && total < 1:
 			return Language.lookup('pokemon.effectiveness.notveryeffective');
 		case total === 0:

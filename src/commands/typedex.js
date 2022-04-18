@@ -9,12 +9,12 @@ module.exports = {
 		.setDescription(Language.lookup('command.typedex.description'))
 		.addStringOption(option => option.setName(Language.lookup('option.type.first'))
 			.setDescription(Language.lookup('option.type.description'))
-			.setRequired(true)
+			.setRequired(true),
 		),
-		
+
 	async execute(interaction) {
 		await interaction.deferReply();
-		
+
 		const parameter = interaction.options.getString(Language.lookup('option.type.first'), true);
 		const searchTerm = parameter.toLowerCase();
 
@@ -24,7 +24,7 @@ module.exports = {
 			color: TypeColors[type.name],
 			title: capitalize(type.name),
 			fields: [
-				{ name: Language.lookup('types.pokemon.count'), value: `${type.pokemon.length}` }
+				{ name: Language.lookup('types.pokemon.count'), value: `${type.pokemon.length}` },
 			],
 		});
 

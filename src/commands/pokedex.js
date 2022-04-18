@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const PokemonService = require('../services/pokemon-service');
-const { capitalize, parseEffectiveness, TypeColors, Language, TypeMatrix } = require('../utils/utils');
+const { capitalize, TypeColors, Language, TypeMatrix } = require('../utils/utils');
 
 module.exports = {
 	data: new SlashCommandBuilder()
