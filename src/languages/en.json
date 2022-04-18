@@ -11,6 +11,8 @@
   "subcommand.pokemon.description": "Strenghts and weaknesses of a pokémon.",
   "command.test.name": "test",
   "command.test.description": "Tests your knowledge about pokemon typing.",
+  "command.attack.name": "attack",
+  "command.attack.description": "Attack a Pokémon with a type.",
   "option.pokemon.name": "pokémon",
   "option.pokemon.description": "Name of the Pokémon",
   "option.type.first": "pokémon-type",
