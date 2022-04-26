@@ -1,20 +1,22 @@
 {
   "name": "discord-pokemon-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "A small bot to help with pokémon type interactions.",
   "type": "commonjs",
   "main": "src/index.js",
   "scripts": {
     "start": "node -r dotenv/config .",
-    "lint": "eslint . --ext js",
-    "deploy-commands": "node src/deploy-commands.js",
+    "lint": "eslint . --ext js --fix",
+    "deploy-commands": "node -r dotenv/config src/deploy-commands.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "discord",
+    "discord.js",
     "bot",
     "javascript",
-    "node"
+    "node",
+    "pokemon"
   ],
   "author": "monktana",
   "license": "ISC",
