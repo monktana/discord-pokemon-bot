@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
+const winston = require('winston');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
@@ -22,5 +23,23 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+
+const logger = winston.createLogger({
+  level: 'info',  
+	format: winston.format.combine(
+    winston.format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    winston.format.errors({ stack: true }),
+    winston.format.splat(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ filename: './docs/logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: './docs/logs/combined.log' }),
+  ],
+});
+
+client.logger = logger;
 
 client.login(process.env.TOKEN);

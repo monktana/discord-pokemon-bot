@@ -9,10 +9,17 @@ module.exports = {
 		if (!command) return;
 
 		try {
+			interaction.client.logger.info({
+				message: `command executed.`,
+				user: interaction.user.username,
+				command: interaction.commandName,
+				options: interaction.options.data
+			})
 			await command.execute(interaction);
 		}
 		catch (error) {
-			console.error(error);
+			interaction.logger.error(error);
+
 			await interaction.editReply({ content: 'There was an error while executing this command!', ephemeral: true });
 		}
 	},
