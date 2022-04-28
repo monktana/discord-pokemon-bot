@@ -33,6 +33,22 @@ module.exports.parseEffectiveness = function(effectiveness) {
 	}
 },
 
+module.exports.filterSuperEffectiveMatchups = function(matchups) {
+	return matchups.filter(matchup => matchup.matchup.effectiveness >= 2);
+},
+
+module.exports.filterEffectiveMatchups = function(matchups) {
+	return matchups.filter(matchup => matchup.matchup.effectiveness === 1);
+},
+
+module.exports.filterNotEffectiveMatchups = function(matchups) {
+	return matchups.filter(matchup => matchup.matchup.effectiveness > 0 && matchup.matchup.effectiveness < 1);
+},
+
+module.exports.filterNoEffectMatchups = function(matchups) {
+	return matchups.filter(matchup => matchup.matchup.effectiveness === 0);
+},
+
 module.exports.TypeColors = TypeColors;
 module.exports.TypeMatrix = TypeMatrix;
 module.exports.Language = Language;
