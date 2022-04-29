@@ -13,7 +13,7 @@ module.exports.lookup = function(key, targetLanguage = 'en') {
 	}
 
 	try {
-		return this.getTranslator()[targetLanguage][key];
+		return (this.getTranslator())[targetLanguage][key];
 	}
 	catch (error) {
 		throw new LanguageError(`Could not look up '${key}' for language '${targetLanguage}': ${error}`);
