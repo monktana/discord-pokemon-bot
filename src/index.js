@@ -1,6 +1,13 @@
 const fs = require('fs');
+const Sentry = require("@sentry/node");
 const { Client, Collection, Intents } = require('discord.js');
 const winston = require('winston');
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 1.0,
+  environment: process.env.NODE_ENV
+});
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 

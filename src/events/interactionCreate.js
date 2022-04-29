@@ -1,3 +1,5 @@
+const Sentry = require("@sentry/node");
+
 module.exports = {
 	name: 'interactionCreate',
 	once: false,
@@ -7,6 +9,11 @@ module.exports = {
 		const command = interaction.client.commands.get(interaction.commandName);
 
 		if (!command) return;
+
+    const commandScope = Sentry.getCurrentHub().pushScope();
+		commandScope.setTag("command", interaction.commandName);
+		commandScope.setContext("options", interaction.options.data);
+		commandScope.setUser(interaction.user);
 
 		try {
 			interaction.client.logger.info({
@@ -18,9 +25,12 @@ module.exports = {
 			await command.execute(interaction);
 		}
 		catch (error) {
-			interaction.logger.error(error);
+			interaction.client.logger.error(error);
+			Sentry.captureException(error);
 
 			await interaction.editReply({ content: 'There was an error while executing this command!', ephemeral: true });
 		}
+
+		Sentry.getCurrentHub().popScope();
 	},
 };
