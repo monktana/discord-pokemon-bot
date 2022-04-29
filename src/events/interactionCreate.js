@@ -18,9 +18,13 @@ module.exports = {
 		try {
 			interaction.client.logger.info({
 				message: `command executed.`,
-				user: interaction.user.username,
+				user: {
+					id: interaction.user.id,
+					name: interaction.user.username,
+					isBot: interaction.user.bot
+				},
 				command: interaction.commandName,
-				options: interaction.options.data
+				options: interaction.options
 			})
 			await command.execute(interaction);
 		}
