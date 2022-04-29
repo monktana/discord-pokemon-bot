@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
+const util = require('util');
 const Util = require('../utils/utils');
 const PokemonService = require('../services/pokemon-service');
 
@@ -19,6 +20,10 @@ module.exports = {
 		const searchTerm = parameter.toLowerCase();
 
 		const type = (await PokemonService.getType(searchTerm)).results[0];
+		if (type == null) {
+			const response = util.format(Util.Language.lookup('command.typedex.notfound', 'en'), searchTerm);
+			return interaction.editReply(response);
+		}
 
 		const veryEffectiveTypes = Util.filterSuperEffectiveMatchups(type.matchups).map(this.formatMatchup).join(', ');
 		const notEffectiveTypes = Util.filterNotEffectiveMatchups(type.matchups).map(this.formatMatchup).join(', ');

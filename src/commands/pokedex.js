@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
+const util = require('util');
 const PokemonService = require('../services/pokemon-service');
 const Util = require('../utils/utils');
 
@@ -20,6 +21,11 @@ module.exports = {
 		const searchTerm = parameter.toLowerCase();
 
 		const pokemon = (await PokemonService.getPokemon(searchTerm)).results[0];
+		if (pokemon == null) {
+			const response = util.format(Util.Language.lookup('command.pokedex.notfound', 'en'), searchTerm);
+			return interaction.editReply(response);
+		}
+
 		const matchups = Object.entries(Util.TypeMatrix).map((attackingType) => {
 			const [attackingTypeName, defendingTypes] = attackingType;
 			let effectiveness = 1;
