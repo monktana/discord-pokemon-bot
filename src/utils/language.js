@@ -1,5 +1,5 @@
 const fs = require('fs');
-const LanguageError = require('../errors/languageError');
+const { LanguageError } = require('../errors/languageError');
 
 let translator = null;
 
@@ -12,12 +12,12 @@ module.exports.lookup = function(key, targetLanguage = 'en') {
 		throw new LanguageError(`Language '${targetLanguage}' is currently unsupported`);
 	}
 
-	try {
-		return (this.getTranslator())[targetLanguage][key];
+	const message = (this.getTranslator())[targetLanguage][key];
+	if (!message) {
+		throw new LanguageError(`No message found for '${key}' under language '${targetLanguage}'`);
 	}
-	catch (error) {
-		throw new LanguageError(`Could not look up '${key}' for language '${targetLanguage}': ${error}`);
-	}
+	
+	return message;
 };
 
 module.exports.getTranslator = function() {

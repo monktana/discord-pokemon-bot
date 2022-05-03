@@ -1,5 +1,5 @@
 const Language = require('./../utils/language');
-const LanguageError = require('./../errors/languageError');
+const { LanguageError } = require('./../errors/languageError');
 
 describe('translator object is a singleton', () => {
   it('generates only one translator object', async () => {
