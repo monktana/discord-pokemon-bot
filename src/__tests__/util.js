@@ -139,4 +139,78 @@ describe('parseEffectiveness', () => {
 
     expect(parseEffectiveness(NaN)).toBe('Unknown');
   });
-})
+});
+
+describe.only('filterEffectiveness', () => {
+  it('can filter super effective matchups from a type', () => {
+    const superEffectiveMatchups = filterSuperEffectiveMatchups(attackingType.matchups);
+    const matchupTypeNames = superEffectiveMatchups.map(matchup => matchup.name);
+
+    expect(superEffectiveMatchups.length).toBe(2);
+    expect(matchupTypeNames).toEqual(['fairy', 'grass']);
+  });
+
+  it('can filter effective matchups from a type', () => {
+    const effectiveMatchups = filterEffectiveMatchups(attackingType.matchups);
+    const matchupTypeNames = effectiveMatchups.map(matchup => matchup.name);
+
+    expect(effectiveMatchups.length).toBe(11);
+    expect(matchupTypeNames).toEqual(['bug', 'dark', 'dragon', 'electric', 'fighting', 'fire', 'flying', 'ice', 'normal', 'psychic', 'water']);
+  });
+
+  it('can filter not very effective matchups from a type', () => {
+    const notVeryEffectiveMatchups = filterNotEffectiveMatchups(attackingType.matchups);
+    const matchupTypeNames = notVeryEffectiveMatchups.map(matchup => matchup.name);
+
+    expect(notVeryEffectiveMatchups.length).toBe(4);
+    expect(matchupTypeNames).toEqual(['ghost', 'ground', 'poison', 'rock']);
+  });
+
+  it('can filter matchups with no effect from a type', () => {
+    const noEffectMatchups = filterNoEffectMatchups(attackingType.matchups);
+    const matchupTypeNames = noEffectMatchups.map(matchup => matchup.name);
+
+    expect(noEffectMatchups.length).toBe(1);
+    expect(matchupTypeNames).toEqual(['steel']);
+  });
+
+  it('throws an error, if input is not an array', () => {
+    expect.assertions(1);
+
+    try {
+      filterNoEffectMatchups({});
+    } catch (error) {
+      expect(error).toBeInstanceOf(TypeError);
+    }
+  });
+
+  it('throws an error, if input does not contain a matchup object', () => {
+    expect.assertions(1);
+
+    try {
+      filterNoEffectMatchups([{}, {}]);
+    } catch (error) {
+      expect(error).toBeInstanceOf(TypeError);
+    }
+  });
+
+  it('throws an error, if the matchup object does not contain an effectiveness', () => {
+    expect.assertions(1);
+
+    try {
+      filterNoEffectMatchups([{matchup: {}}, {matchup: {effectiveness: 1}}]);
+    } catch (error) {
+      expect(error).toBeInstanceOf(TypeError);
+    }
+  });
+
+  it('throws an error, if the effectiveness is not a number', () => {
+    expect.assertions(1);
+
+    try {
+      filterNoEffectMatchups([{matchup: {effectiveness: NaN}}, {matchup: {effectiveness: 1}}]);
+    } catch (error) {
+      expect(error).toBeInstanceOf(TypeError);
+    }
+  });
+});
