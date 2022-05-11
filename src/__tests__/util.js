@@ -94,3 +94,49 @@ describe('calculateEffectiveness', () => {
     }
   });
 });
+
+describe('parseEffectiveness', () => {
+  it('parses a number between 0 and 4 into the correct corresponding message', () => {
+    const noEffect = parseEffectiveness(0);
+    const notVeryEffectiveQuarter = parseEffectiveness(0.25);
+    const notVeryEffectiveHalf = parseEffectiveness(0.5);
+    const effective = parseEffectiveness(1);
+    const superEffectivDouble = parseEffectiveness(2);
+    const superEffectivFourTimes = parseEffectiveness(4);
+
+    expect(noEffect).toBe('No effect');
+    expect(notVeryEffectiveQuarter).toBe('Not very effective');
+    expect(notVeryEffectiveHalf).toBe('Not very effective');
+    expect(effective).toBe('Effective');
+    expect(superEffectivDouble).toBe('Super effective');
+    expect(superEffectivFourTimes).toBe('Super effective');
+  });
+
+  it('handles a numerical input below 0 with an unknown message', () => {
+    expect(parseEffectiveness(-0.5)).toBe('Unknown');
+    expect(parseEffectiveness(-1)).toBe('Unknown');
+  });
+
+  it('handles a numerical input above 4 with an unknown message', () => {
+    expect(parseEffectiveness(4.1)).toBe('Unknown');
+    expect(parseEffectiveness(5)).toBe('Unknown');
+  });
+
+  it('handles a numerical input, which is not 0, 0.25, 0.5, 1, 2 or 4 with an unknown message', () => {
+    expect(parseEffectiveness(0.75)).toBe('Unknown');
+    expect(parseEffectiveness(1.5)).toBe('Unknown');
+    expect(parseEffectiveness(3)).toBe('Unknown');
+  });
+
+  it('handles non numerical input with an unknown message', () => {
+    expect(parseEffectiveness(undefined)).toBe('Unknown');
+    expect(parseEffectiveness(null)).toBe('Unknown');
+
+    expect(parseEffectiveness(true)).toBe('Unknown');
+
+    expect(parseEffectiveness('')).toBe('Unknown');
+    expect(parseEffectiveness('test')).toBe('Unknown');
+
+    expect(parseEffectiveness(NaN)).toBe('Unknown');
+  });
+})
